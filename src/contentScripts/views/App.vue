@@ -3,6 +3,83 @@ import { useToggle } from '@vueuse/core'
 import 'uno.css'
 
 const [show, toggle] = useToggle(false)
+
+// 找到所有的输入框
+
+// 为每个输入框添加一个监听事件
+
+// 遍历dom
+
+// 当dom 出现输入框时添加一个监听事件
+
+// 监听页面刷新
+// window.addEventListener('load', () => {
+//   const inputList = document.querySelectorAll('input')
+
+//   inputList.forEach((input) => {
+//     input.addEventListener('focus', () => {
+//       toggle()
+//     })
+//     input.addEventListener('blur', () => {
+//       toggle()
+//     })
+//   })
+// })
+
+// console.log('asd')
+
+// // onLoad(() => {
+// const inputList = document.querySelectorAll('input')
+
+// inputList.forEach((input) => {
+//   console.log(input)
+
+//   input.addEventListener('focus', () => {
+//     toggle()
+//   })
+//   input.addEventListener('blur', () => {
+//     toggle()
+//   })
+// })
+// })
+
+// 使用MutationObserver
+
+onMounted(() => {
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        const inputList = document.querySelectorAll('input,textarea,[contenteditable="true"]')
+
+        inputList.forEach((input) => {
+          // 判断事件是否已经绑定
+          if (input.getAttribute('rime-event') === 'true')
+            return
+
+          input.addEventListener('focus', () => {
+            // console.log('focus')
+
+            toggle()
+          })
+
+          input.addEventListener('blur', () => {
+            // console.log('blur')
+
+            toggle()
+          })
+
+          input.setAttribute('rime-event', 'true')
+        })
+      }
+    }
+  })
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+  })
+})
 </script>
 
 <template>
@@ -15,7 +92,7 @@ const [show, toggle] = useToggle(false)
       :class="show ? 'opacity-100' : 'opacity-0'"
     >
       <h1 class="text-lg">
-        Vitesse WebExt
+        输入法demo
       </h1>
       <SharedSubtitle />
     </div>
